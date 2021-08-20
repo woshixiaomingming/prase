@@ -1,13 +1,56 @@
-import os
+import linecache
 
 
-class ReadTxt (object):
+class ReadTxt(object):
+    file_path = []
+    position = 1
+    file = None
 
-    txt_path = os.getcwd() + '/data/result'
-    file_name = 'result_data'
+    def __init__(self, file_path: [], file: None, position: 1):
+        self.file_path = file_path
+        self.file = file
+        self.position = position
 
-    def __init__(self, txt_path: os.getcwd() + '/data/result', file_name: 'result_data'):
-        self.txt_path = txt_path
-        self.file_name = file_name
+    # 获取文件位置的词
+    def txt_word(self):
+        if not self.file:
+            return None
+        word = linecache.getline(self.file, self.position)
+        if word:
+            return word
+        else:
+            return None
 
-    def read_info (self, ):
+    # 获取文件位置的词进行比对统计
+    def read_count(self, key_word):
+        if not key_word:
+            return 0
+        count = 0
+        for file in self.file_path:
+            position = 1
+            while True:
+                word = linecache.getline(file, position)
+                if word and key_word is word:
+                    count = count + 1
+                else:
+                    break
+                position = position + 1
+        return count
+
+    # 获取文件位置的词进行比对统计
+    def read_split_count(self, key_word):
+        if not key_word:
+            return 0
+        count = 0
+        for file in self.file_path:
+            position = 1
+            while True:
+                word = linecache.getline(file, position)
+                if word and key_word is word:
+                    word_info = word.split(sep=':')
+                    if word_info[0] is key_word:
+                        count = count + word_info[1]
+                else:
+                    break
+                position = position + 1
+        return count
